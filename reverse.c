@@ -17,17 +17,18 @@ char **read_file(FILE *input, int *cnt_out) {
 
     char *line = NULL;
     size_t len = 0;
-    ssize_t nread; 
+    ssize_t n; 
 
     //reads each line and duplicates them for later use
-    while((nread = getline(&line, &len, input)) != -1){
+    while((n = getline(&line, &len, input)) != -1){
 
-        if (nread > 0 && line[nread - 1] == '\n') {
-            line[nread - 1] = '\0';
+        if (n > 0 && line[n-1] == '\n') {
+            line[n-1] = '\0';
         }
 
-        char *line_copy = strdup(line);
-        if(line_copy == NULL){
+        char *cp = strdup(line);
+
+        if(cp == NULL){
             fprintf(stderr, "malloc failed\n");
             exit(1);
         }
@@ -35,13 +36,14 @@ char **read_file(FILE *input, int *cnt_out) {
         if(cnt >= cap){
             cap = cap * 3;
             char **t = realloc(lines, cap * sizeof(char *));
+
             if(t == NULL){
                 fprintf(stderr,"malloc failed\n");
                 exit(1);
             }
             lines = t;
         }
-        lines[cnt++] = line_copy;
+        lines[cnt++] = cp;
 
     }
     free(line);
@@ -94,6 +96,7 @@ int main(int argc, char *argv[]) {
         }
 
         FILE *read = fopen(argv[1], "r");
+
         if(read == NULL){
             fprintf(stderr, "error: cannot open file '%s'\n", argv[1]);
             exit(1);
@@ -105,6 +108,7 @@ int main(int argc, char *argv[]) {
 
         //open the output file and write to it
         FILE *write = fopen(argv[2], "w");
+        
         if(write == NULL){
             fprintf(stderr, "error: cannot open file '%s'\n", argv[2]);
             exit(1);
