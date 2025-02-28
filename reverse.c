@@ -26,9 +26,9 @@ char **read_file(FILE *input, int *cnt_out) {
             line[n-1] = '\0';
         }
 
-        char *cp = strdup(line);
+        char *copy = strdup(line);
 
-        if(cp == NULL){
+        if(copy == NULL){
             fprintf(stderr, "malloc failed\n");
             exit(1);
         }
@@ -43,7 +43,7 @@ char **read_file(FILE *input, int *cnt_out) {
             }
             lines = t;
         }
-        lines[cnt++] = cp;
+        lines[cnt++] = copy;
 
     }
     free(line);
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
 
         //open the output file and write to it
         FILE *write = fopen(argv[2], "w");
-        
+
         if(write == NULL){
             fprintf(stderr, "error: cannot open file '%s'\n", argv[2]);
             exit(1);
